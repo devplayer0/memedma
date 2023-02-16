@@ -12,6 +12,11 @@ pub fn build(b: *std.build.Builder) void {
     const mode = b.standardReleaseOptions();
 
     const exe = b.addExecutable("memedma", "src/main.zig");
+    exe.linkLibC();
+    if (std.os.getenv("LD_LIBRARY_PATH")) |lib_path| {
+        exe.addLibraryPath(lib_path);
+    }
+    exe.linkSystemLibrary("rdmacm");
     exe.setTarget(target);
     exe.setBuildMode(mode);
     exe.install();

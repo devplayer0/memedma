@@ -26,8 +26,7 @@
             zig
           ];
           buildInputs = [
-          ];
-          propagatedBuildInputs = [
+            rdma-core
           ];
 
           installPhase = ''
@@ -57,6 +56,7 @@
           compiler = gcc;
           libraries = [
             gcc.cc.lib
+            rdma-core
           ];
           includes = libraries;
         };
@@ -64,13 +64,6 @@
         packages = with pkgs; [
           zig
         ];
-
-        # env = [
-        #   {
-        #     name = "LDFLAGS";
-        #     eval = "-L\${DEVSHELL_DIR}/lib";
-        #   }
-        # ];
       };
 
       packages = rec {

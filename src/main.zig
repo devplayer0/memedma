@@ -1,8 +1,24 @@
 const std = @import("std");
+const rdma_cm = @cImport({
+    @cInclude("rdma/rdma_cma.h");
+});
+
+const Test = struct {
+    my_val: u32,
+};
 
 pub fn main() !void {
     // Prints to stderr (it's a shortcut based on `std.io.getStdErr()`)
     std.debug.print("All your {s} are belong to us.\n", .{"codebase"});
+
+    var cm_id: ?*rdma_cm.rdma_cm_id = null;
+    var ctx = Test{
+        .my_val = 123,
+    };
+    if (rdma_cm.rdma_create_id(null, &cm_id, &ctx, rdma_cm.RDMA_PS_TCP) != 0) {
+        return error.RDMACMCreateIdFailed;
+    }
+    defer _ = rdma_cm.rdma_destroy_id(cm_id);
 
     // stdout is for the actual output of your application, for example if you
     // are implementing gzip, then only the compressed bytes should be sent to
